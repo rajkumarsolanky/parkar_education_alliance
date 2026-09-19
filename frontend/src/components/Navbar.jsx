@@ -96,15 +96,33 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-md flex flex-col gap-sm">
-          <Link to="/" className="font-body-md text-body-md text-on-surface-variant hover:text-primary py-2" onClick={() => setMenuOpen(false)}>Home</Link>
-          <Link to="/about" className="font-body-md text-body-md text-on-surface-variant hover:text-primary py-2" onClick={() => setMenuOpen(false)}>About</Link>
-          <Link to="/testing-services" className="font-body-md text-body-md text-on-surface-variant hover:text-primary py-2" onClick={() => setMenuOpen(false)}>Testing Services</Link>
-          <Link to="/contact" className="font-body-md text-body-md text-on-surface-variant hover:text-primary py-2" onClick={() => setMenuOpen(false)}>Contact</Link>
+        <div className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-md flex flex-col gap-1">
+          <Link to="/" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+            <span className="material-symbols-outlined text-[18px]">home</span>Home
+          </Link>
+          <Link to="/about" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+            <span className="material-symbols-outlined text-[18px]">info</span>About
+          </Link>
+          <Link to="/testing-services" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+            <span className="material-symbols-outlined text-[18px]">quiz</span>Testing Services
+          </Link>
+          <Link to="/contact" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+            <span className="material-symbols-outlined text-[18px]">mail</span>Contact
+          </Link>
+          <div className="h-px bg-outline-variant/30 my-1"></div>
           {user ? (
-            <button onClick={handleLogout} className="text-left text-error py-2">Logout</button>
+            <>
+              <Link to="/profile" className="flex items-center gap-2 font-body-md text-body-md text-primary font-semibold hover:bg-primary/10 px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+                <span className="material-symbols-outlined text-[18px]">badge</span>My Profile & Admit Card
+              </Link>
+              <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="flex items-center gap-2 text-left text-error font-semibold px-3 py-2.5 rounded-xl hover:bg-error-container/20 transition-colors">
+                <span className="material-symbols-outlined text-[18px]">logout</span>Logout
+              </button>
+            </>
           ) : (
-            <Link to="/login" className="bg-primary text-on-primary font-label-caps text-label-caps px-md py-sm rounded-full text-center mt-2" onClick={() => setMenuOpen(false)}>Login / Sign Up</Link>
+            <Link to="/login" className="bg-primary text-on-primary font-label-caps text-label-caps px-md py-sm rounded-full text-center mt-2 flex items-center justify-center gap-2" onClick={() => setMenuOpen(false)}>
+              <span className="material-symbols-outlined text-[18px]">login</span>Login / Sign Up
+            </Link>
           )}
         </div>
       )}

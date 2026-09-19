@@ -13,3 +13,11 @@
 .animate-float { animation: subtleFloat 6s ease-in-out infinite; }
 @keyframes pulseSoft { 0%,100% { opacity:.8; transform:scale(1); } 50% { opacity:1; transform:scale(1.05); } }
 .animate-pulse-soft { animation: pulseSoft 4s ease-in-out infinite; }
+
+/* Hide scrollbar but keep scrolling */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+

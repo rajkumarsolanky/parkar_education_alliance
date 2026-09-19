@@ -188,10 +188,53 @@ export default function Profile() {
 
   return (
     <div className="max-w-6xl w-full mx-auto px-margin-mobile md:px-0 py-lg md:py-xl">
+
+      {/* ── Mobile: Avatar + Horizontal Tab Bar ── */}
+      <div className="lg:hidden flex flex-col gap-3 mb-4">
+        {/* Compact Avatar Row */}
+        <div className="bg-surface-container-lowest rounded-2xl px-4 py-3 border border-outline-variant/30 flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-[#173a5e] text-white flex items-center justify-center font-bold text-xl shadow-md uppercase shrink-0">
+            {user?.full_name ? user.full_name.charAt(0) : 'U'}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-on-surface text-sm leading-tight truncate">{user?.full_name}</p>
+            {user?.father_name && <p className="text-[11px] text-on-surface-variant truncate">S/D/O {user.father_name}</p>}
+            <p className="text-[10px] font-mono font-semibold text-primary mt-0.5">{user?.cnic}</p>
+          </div>
+          <button onClick={handleLogout} className="shrink-0 flex flex-col items-center gap-0.5 text-error text-[10px] font-bold">
+            <span className="material-symbols-outlined text-[20px]">logout</span>
+            Logout
+          </button>
+        </div>
+
+        {/* Horizontal Tab Bar */}
+        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+          {[
+            { id: 'admit-card', icon: 'badge', label: 'Admit Card' },
+            { id: 'dashboard', icon: 'dashboard', label: 'My Info' },
+            { id: 'edit', icon: 'person_edit', label: 'Edit Profile' },
+            { id: 'security', icon: 'lock_reset', label: 'Security' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => { setActiveTab(tab.id); setError(''); setSuccessMsg(''); }}
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeTab === tab.id
+                  ? 'bg-[#173a5e] text-white shadow-md'
+                  : 'bg-surface-container-lowest border border-outline-variant/30 text-on-surface-variant'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[16px]">{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-lg">
         
-        {/* Left Column: Sidebar Profile Navigation */}
-        <div className="lg:col-span-1 flex flex-col gap-md">
+        {/* Left Column: Sidebar Profile Navigation (Desktop only) */}
+        <div className="hidden lg:flex lg:col-span-1 flex-col gap-md">
           <div className="bg-surface-container-lowest rounded-3xl p-md border border-outline-variant/30 ambient-shadow-sm flex flex-col items-center text-center">
             <div className="w-20 h-20 rounded-2xl bg-[#173a5e] text-white flex items-center justify-center font-bold text-2xl shadow-md uppercase mb-sm">
               {user?.full_name ? user.full_name.charAt(0) : 'U'}
