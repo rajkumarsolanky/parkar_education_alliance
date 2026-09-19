@@ -46,51 +46,73 @@ export default function Navbar() {
     ? user.full_name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2)
     : 'U';
 
-  const navLink = (path, label) => (
-    <Link
-      to={path}
-      className={`font-body-md text-body-md transition-colors hover:bg-primary-container/10 rounded-lg px-sm py-xs ${location.pathname === path ? 'text-primary border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary'
+  const navLink = (path, label) => {
+    const isActive = location.pathname === path;
+
+    return (
+      <Link
+        to={path}
+        className={`relative overflow-hidden rounded-full px-4 py-2.5 text-sm font-semibold tracking-wide transition-all duration-300 ease-out ${
+          isActive
+            ? 'text-blue-600 bg-blue-50 shadow-sm'
+            : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/80'
         }`}
-    >
-      {label}
-    </Link>
-  );
+      >
+        <span className="relative z-10">{label}</span>
+        <span
+          className={`absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-blue-500 transition-all duration-300 ${
+            isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-75'
+          }`}
+        />
+      </Link>
+    );
+  };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm transition-all duration-300 ${scrolled ? 'ambient-shadow-md' : ''}`}>
-      <div className="flex justify-between items-center max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-4">
-        <Link to="/" className="flex items-center gap-sm group">
-          <img alt="Parkar Education Alliance Logo" className="w-10 h-10 object-contain rounded-full border border-outline-variant/50 group-hover:scale-105 transition-transform" src="src\assets\img\pea.png" />
-          <span className="font-headline-md text-headline-md font-bold text-primary tracking-tight">PARKAR</span>
+    <nav className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-6xl backdrop-blur-xl transition-all duration-300 ${scrolled ? 'bg-white/85 shadow-[0_14px_30px_rgba(17,24,39,0.08)]' : 'bg-white/75'} border border-slate-200/80 rounded-full`}>
+      <div className="flex justify-between items-center px-4 md:px-6 py-3">
+        <Link to="/" className="flex items-center gap-3 group">
+          <img alt="Parkar Education Alliance Logo" className="w-10 h-10 object-contain rounded-full border border-slate-200 bg-white shadow-sm group-hover:scale-105 transition-transform" src="src\assets\img\pea.png" />
+          <span className="font-bold text-lg md:text-xl text-blue-600 tracking-tight">PARKAR</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-md">
+        <div className="hidden md:flex items-center gap-2 rounded-full bg-slate-100/80 px-2 py-1 border border-slate-200/80">
           {navLink('/', 'Home')}
           {navLink('/about', 'About')}
           {navLink('/testing-services', 'Testing Services')}
           {navLink('/contact', 'Contact')}
         </div>
 
-        <div className="flex items-center gap-sm">
+        <div className="flex items-center gap-2">
           {user ? (
             <>
               <div
-                className="hidden md:flex w-9 h-9 rounded-full bg-primary items-center justify-center text-on-primary font-bold cursor-pointer"
+                className="hidden md:flex w-9 h-9 rounded-full bg-blue-600 items-center justify-center text-white font-bold cursor-pointer shadow-md shadow-blue-200"
                 onClick={() => navigate('/profile')}
               >
                 {initials}
               </div>
-              <button onClick={handleLogout} className="hidden md:flex items-center gap-1 bg-surface-container text-on-surface font-label-caps text-label-caps px-md py-sm rounded-full border border-outline-variant hover:bg-surface-variant transition-all">
+              <button onClick={handleLogout} className="hidden md:flex items-center gap-1 bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-full border border-slate-200 hover:bg-slate-200 transition-all">
                 <span className="material-symbols-outlined text-[16px]">logout</span> Logout
               </button>
             </>
           ) : (
-            <Link to="/login" className="hidden md:flex items-center justify-center bg-primary text-on-primary font-label-caps text-label-caps px-md py-sm rounded-full hover:bg-on-primary-fixed-variant hover:shadow-md transition-all active:scale-95 duration-150">
+            <Link to="/login" className="hidden md:flex items-center justify-center bg-blue-600 text-white font-semibold px-4 py-2.5 rounded-full shadow-md shadow-blue-200 hover:bg-blue-500 transition-all active:scale-95">
               Login / Sign Up
             </Link>
           )}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-on-surface-variant p-2 rounded-lg hover:bg-surface-variant transition-colors">
-            <span className="material-symbols-outlined">menu</span>
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+            className={`menu-toggle md:hidden ${menuOpen ? 'open' : ''}`}
+          >
+            <span className="menu-toggle-lines">
+              <span className="menu-toggle-line"></span>
+              <span className="menu-toggle-line"></span>
+              <span className="menu-toggle-line"></span>
+            </span>
           </button>
         </div>
       </div>

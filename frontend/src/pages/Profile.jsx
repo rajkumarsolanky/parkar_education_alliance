@@ -249,22 +249,22 @@ export default function Profile() {
           <div className="bg-surface-container-lowest rounded-3xl p-sm border border-outline-variant/30 ambient-shadow-sm flex flex-col gap-1">
             <button
               onClick={() => { setActiveTab('admit-card'); setError(''); setSuccessMsg(''); }}
-              className={`flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
+              className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'admit-card'
-                  ? 'bg-[#173a5e] text-white shadow-sm'
-                  : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               <span className="material-symbols-outlined text-[20px]">badge</span>
-              Admit Card (Roll No Slip)
+              Admit Card
             </button>
 
             <button
               onClick={() => { setActiveTab('dashboard'); setError(''); setSuccessMsg(''); }}
-              className={`flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
+              className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'dashboard'
-                  ? 'bg-[#173a5e] text-white shadow-sm'
-                  : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               <span className="material-symbols-outlined text-[20px]">dashboard</span>
@@ -273,10 +273,10 @@ export default function Profile() {
             
             <button
               onClick={() => { setActiveTab('edit'); setError(''); setSuccessMsg(''); }}
-              className={`flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
+              className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'edit'
-                  ? 'bg-[#173a5e] text-white shadow-sm'
-                  : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               <span className="material-symbols-outlined text-[20px]">person_edit</span>
@@ -285,10 +285,10 @@ export default function Profile() {
             
             <button
               onClick={() => { setActiveTab('security'); setError(''); setSuccessMsg(''); }}
-              className={`flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
+              className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'security'
-                  ? 'bg-[#173a5e] text-white shadow-sm'
-                  : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               <span className="material-symbols-outlined text-[20px]">lock_reset</span>
