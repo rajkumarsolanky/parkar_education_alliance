@@ -7,7 +7,7 @@ export default function AdmitCard({ data, onClose }) {
     applicationId = '246937',
     fullName = 'Student Name',
     fatherName = 'Father Name',
-    surname = 'Parkar',
+    surname = 'surname',
     cnic = '44301-1234567-1',
     testDate = 'Sunday, 27-September-2026 05:00 PM',
     testVenue = 'Public School / Govt Degree College, Nagarparkar',
@@ -124,9 +124,9 @@ export default function AdmitCard({ data, onClose }) {
               </div>
               <div class="photo-box">
                 ${photoUrl
-                  ? `<img src="${photoUrl}" alt="Candidate"/>`
-                  : `<div class="photo-placeholder">Candidate<br/>Photo</div>`
-                }
+        ? `<img src="${photoUrl}" alt="Candidate"/>`
+        : `<div class="photo-placeholder">Candidate<br/>Photo</div>`
+      }
               </div>
             </div>
 
@@ -165,7 +165,7 @@ export default function AdmitCard({ data, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto flex items-center justify-center p-3 md:p-6 print:p-0 print:bg-white print:static print:inset-auto">
       <div className="bg-white text-slate-900 rounded-2xl shadow-2xl max-w-2xl w-full p-4 md:p-6 relative print:shadow-none print:p-0 print:max-w-full print:rounded-none">
-        
+
         {/* Top Control Bar (Hidden in Print / PDF) */}
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 print:hidden">
           <div className="flex items-center gap-2">
@@ -197,7 +197,7 @@ export default function AdmitCard({ data, onClose }) {
 
         {/* Printable Card Frame — Exact 1:1 match to Official Sample */}
         <div className="border-[2px] border-slate-700 p-4 md:p-6 bg-white font-sans text-slate-900 leading-normal print:border-[2px]">
-          
+
           {/* Header Row */}
           <div className="flex items-start justify-between gap-2 border-b border-slate-400 pb-2.5">
             {/* Logo + Titles */}
@@ -239,7 +239,7 @@ export default function AdmitCard({ data, onClose }) {
 
           {/* Student Info & Photo Section */}
           <div className="grid grid-cols-12 gap-3 items-start my-3">
-            
+
             {/* Left Data Table */}
             <div className="col-span-8 md:col-span-9 space-y-1.5 text-[11px] md:text-xs">
               <div className="grid grid-cols-12 items-baseline">

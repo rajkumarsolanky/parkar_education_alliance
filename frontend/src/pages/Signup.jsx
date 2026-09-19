@@ -35,8 +35,8 @@ export default function Signup() {
     e.preventDefault();
     const { fullName, fatherName, surname, cnic, mobile, dob, password } = formData;
 
-    if (!fullName || !cnic || !mobile || !dob || !password) {
-      setError('Please fill in all required fields.');
+    if (!fullName || !fatherName || !surname || !cnic || !mobile || !dob || !password) {
+      setError('Please fill in all required fields, including father name and surname.');
       return;
     }
 
@@ -114,7 +114,7 @@ export default function Signup() {
           <div className="flex flex-col gap-xs">
             <label htmlFor="fullName" className="font-body-sm text-body-sm font-semibold text-on-surface flex items-center gap-1">
               <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>
-              Full Name
+              Applicant Full Name
             </label>
             <input
               type="text"
@@ -130,11 +130,12 @@ export default function Signup() {
           <div className="flex flex-col gap-xs">
             <label htmlFor="fatherName" className="font-body-sm text-body-sm font-semibold text-on-surface flex items-center gap-1">
               <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person_outline</span>
-              Father's Name
+              Father’s Name
             </label>
             <input
               type="text"
               id="fatherName"
+              required
               value={formData.fatherName}
               onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
               placeholder="e.g. Ghulam Rasool"
@@ -145,11 +146,12 @@ export default function Signup() {
           <div className="flex flex-col gap-xs">
             <label htmlFor="surname" className="font-body-sm text-body-sm font-semibold text-on-surface flex items-center gap-1">
               <span className="material-symbols-outlined text-[18px] text-on-surface-variant">groups</span>
-              Surname / Caste
+              Surname / Family Name
             </label>
             <input
               type="text"
               id="surname"
+              required
               value={formData.surname}
               onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
               placeholder="e.g. Parkar, Soomro, etc."

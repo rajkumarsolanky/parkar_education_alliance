@@ -9,8 +9,8 @@ const router = express.Router();
 router.post('/signup', async (req, res) => {
   try {
     const { full_name, father_name, surname, cnic, mobile, dob, password } = req.body;
-    if (!full_name || !cnic || !mobile || !dob || !password) {
-      return res.status(400).json({ error: 'Sab zaroori fields bharein' });
+    if (!full_name || !father_name || !surname || !cnic || !mobile || !dob || !password) {
+      return res.status(400).json({ error: 'Full name, father name, surname, CNIC, mobile, DOB aur password sab zaroori hain' });
     }
 
     const existing = await pool.query(
