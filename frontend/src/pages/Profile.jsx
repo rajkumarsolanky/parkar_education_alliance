@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import AdmitCard from '../components/AdmitCard';
+import { generateAdmitCardPdf } from '../utils/admitCardPdf';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -109,6 +110,25 @@ export default function Profile() {
       photoUrl: null
     };
     setSelectedAdmitCard(cardData);
+  }
+
+  function handleViewSlip() {
+    openAdmitCard(slips[0] || null);
+  }
+
+  function handleDownloadPdf() {
+    const pdf = generateAdmitCardPdf({
+      fullName: user?.full_name || fullName || 'Candidate Name',
+      fatherName: user?.father_name || fatherName || 'Father Name',
+      surname: user?.surname || surname || 'Parkar',
+      cnic: user?.cnic || '44301-1234567-1',
+      testDate: 'Sunday, 27-Sep-2026 05:00 PM',
+      testVenue: 'Public School Nagarparkar',
+      seatNo: `PEA-2026-${(slips?.[0]?.id || 1).toString().padStart(4, '0')}`,
+      applicationId: `2469${(user?.id || 1).toString().padStart(2, '0')}`,
+    });
+
+    pdf.save(`pea-admit-card-${(user?.full_name || 'candidate').replace(/\s+/g, '-').toLowerCase()}.pdf`);
   }
 
   async function handleUpdateProfile(e) {
@@ -339,14 +359,23 @@ export default function Profile() {
                     </p>
                   </div>
                   
-                  <button
-                    onClick={handleRegisterTest}
-                    disabled={registering}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#173a5e] hover:bg-[#102a45] text-white text-sm font-bold rounded-xl shadow-md transition-all active:scale-95 duration-150"
-                  >
-                    <span className="material-symbols-outlined text-[20px]">download</span>
-                    {registering ? 'Generating Slip...' : 'Download / Print Slip'}
-                  </button>
+                  <div className="flex flex-col sm:flex-row items-stretch gap-2 w-full md:w-auto">
+                    <button
+                      onClick={handleViewSlip}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:border-blue-300 hover:bg-blue-50 text-slate-800 text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95 duration-150"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">visibility</span>
+                      View Slip
+                    </button>
+
+                    <button
+                      onClick={handleDownloadPdf}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#173a5e] hover:bg-[#102a45] text-white text-sm font-bold rounded-xl shadow-md transition-all active:scale-95 duration-150"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">download</span>
+                      Download PDF
+                    </button>
+                  </div>
                 </div>
 
                 {/* Candidate Admit Card Banner Preview Card */}
