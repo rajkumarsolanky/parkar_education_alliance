@@ -1,97 +1,50 @@
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
-export function generateAdmitCardPdf({
-  fullName,
-  fatherName,
-  surname,
-  cnic,
-  testDate,
-  testVenue,
-  seatNo,
-  applicationId,
-}) {
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+export async function generateAdmitCardPdfFromElement(element) {
+  if (!element) {
+    throw new Error('Admit card element is not available.');
+  }
 
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
+  if (document.fonts?.ready) {
+    await document.fonts.ready;
+  }
 
-  doc.setFillColor(247, 250, 252);
-  doc.rect(0, 0, pageWidth, pageHeight, 'F');
+  await Promise.all(
+    Array.from(element.querySelectorAll('img')).map((image) => {
+      if (image.complete) return Promise.resolve();
+      return new Promise((resolve) => {
+        image.addEventListener('load', resolve, { once: true });
+        image.addEventListener('error', resolve, { once: true });
+      });
+    }),
+  );
 
-  doc.setDrawColor(201, 213, 225);
-  doc.roundedRect(14, 14, pageWidth - 28, pageHeight - 28, 8, 8, 'S');
-
-  doc.setFillColor(23, 58, 94);
-  doc.roundedRect(18, 18, pageWidth - 36, 22, 5, 5, 'F');
-
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(18);
-  doc.setFont('helvetica', 'bold');
-  doc.text('PARKAR EDUCATION ALLIANCE', 25, 32);
-
-  doc.setTextColor(15, 23, 42);
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Pre-Entry Test Admit Card', 26, 58);
-
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Official Roll No Slip for appearing in the Pre-Entry Test (Batch - 2026)', 26, 66);
-
-  doc.setDrawColor(148, 163, 184);
-  doc.line(26, 75, pageWidth - 26, 75);
-
-  const leftColX = 26;
-  const rightColX = 120;
-  const startY = 88;
-  const rowGap = 12;
-
-  const rows = [
-    ['Candidate Name', fullName || '—'],
-    ['Father\'s Name', fatherName || '—'],
-    ['Surname / Family Name', surname || '—'],
-    ['CNIC', cnic || '—'],
-    ['Seat No', seatNo || '—'],
-    ['Application ID', applicationId || '—'],
-    ['Test Date', testDate || '—'],
-    ['Venue', testVenue || '—'],
-  ];
-
-  rows.forEach(([label, value], index) => {
-    const y = startY + index * rowGap;
-    doc.setFillColor(255, 255, 255);
-    doc.roundedRect(leftColX, y - 5, pageWidth - 54, 9, 2, 2, 'F');
-    doc.setTextColor(71, 85, 105);
-    doc.setFont('helvetica', 'bold');
-    doc.text(label, leftColX + 3, y + 1);
-    doc.setTextColor(15, 23, 42);
-    doc.setFont('helvetica', 'normal');
-    doc.text(String(value), rightColX, y + 1);
+  const canvas = await html2canvas(element, {
+    backgroundColor: '#ffffff',
+    scale: Math.min(window.devicePixelRatio || 1, 2),
+    useCORS: true,
+    logging: false,
+    width: element.getBoundingClientRect().width,
+    height: element.getBoundingClientRect().height,
+    windowWidth: Math.ceil(element.getBoundingClientRect().width),
+    windowHeight: Math.ceil(element.getBoundingClientRect().height),
   });
 
-  doc.setDrawColor(148, 163, 184);
-  doc.line(26, 185, pageWidth - 26, 185);
+  const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const margin = 8;
+  const availableWidth = pageWidth - margin * 2;
+  const availableHeight = pageHeight - margin * 2;
+  const imageRatio = canvas.width / canvas.height;
+  const imageWidth = Math.min(availableWidth, availableHeight * imageRatio);
+  const imageHeight = imageWidth / imageRatio;
+  const imageX = (pageWidth - imageWidth) / 2;
+  const imageY = (pageHeight - imageHeight) / 2;
+  const imageData = canvas.toDataURL('image/png', 1);
 
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(22, 101, 52);
-  doc.text('Important Instructions', 26, 197);
-
-  doc.setTextColor(51, 65, 85);
-  doc.setFont('helvetica', 'normal');
-  const instructions = [
-    '• Bring original CNIC or B-Form along with this slip.',
-    '• Arrive before 04:30 PM.',
-    '• Mobile phones and electronic devices are strictly prohibited.',
-    '• Carry a black ballpoint pen.',
-  ];
-
-  instructions.forEach((line, index) => {
-    doc.text(line, 30, 206 + index * 8);
-  });
-
-  doc.setTextColor(59, 130, 246);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Good luck!', pageWidth - 42, pageHeight - 24, { align: 'right' });
-
-  return doc;
+  pdf.addImage(imageData, 'PNG', imageX, imageY, imageWidth, imageHeight);
+  return pdf;
 }
+

@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import peaLogo from '../assets/img/pea.png';
-import { generateAdmitCardPdf } from '../utils/admitCardPdf';
+import { generateAdmitCardPdfFromElement } from '../utils/admitCardPdf';
+import QRCode from 'qrcode';
 
-export default function AdmitCard({ data, onClose }) {
+export default function AdmitCard({ data, onClose, autoDownload = false }) {
   const {
     seatNo = 'PEA-2026-2469',
     applicationId = '246937',
@@ -16,23 +17,65 @@ export default function AdmitCard({ data, onClose }) {
   } = data || {};
 
   const cardRef = useRef(null);
+  const autoDownloadStarted = useRef(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [qrUrl, setQrUrl] = useState('');
 
-  const handlePrint = () => {
-    const pdf = generateAdmitCardPdf({
-      fullName,
-      fatherName,
-      surname,
-      cnic,
-      testDate,
-      testVenue,
-      seatNo,
-      applicationId,
+  useEffect(() => {
+    function handleEscape(event) {
+      if (event.key === 'Escape') {
+        onClose?.();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
+  useEffect(() => {
+    let cancelled = false;
+    QRCode.toDataURL(`PEA-ADMIT-${applicationId}-${cnic}`, {
+      errorCorrectionLevel: 'M',
+      margin: 1,
+      width: 180,
+    }).then((dataUrl) => {
+      if (!cancelled) setQrUrl(dataUrl);
+    }).catch(() => {
+      if (!cancelled) setQrUrl('');
     });
 
-    pdf.save(`pea-admit-card-${(fullName || 'candidate').replace(/\s+/g, '-').toLowerCase()}.pdf`);
-  };
+    return () => {
+      cancelled = true;
+    };
+  }, [applicationId, cnic]);
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=PEA-ADMIT-${applicationId}-${cnic}`;
+  async function handlePrint() {
+    setIsDownloading(true);
+    try {
+      const pdf = await generateAdmitCardPdfFromElement(cardRef.current);
+      pdf.save(`pea-admit-card-${(fullName || 'candidate').replace(/\s+/g, '-').toLowerCase()}.pdf`);
+    } finally {
+      setIsDownloading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!autoDownload || !qrUrl || autoDownloadStarted.current) return;
+
+    autoDownloadStarted.current = true;
+    setIsDownloading(true);
+    generateAdmitCardPdfFromElement(cardRef.current).then((pdf) => {
+      pdf.save(`pea-admit-card-${(fullName || 'candidate').replace(/\s+/g, '-').toLowerCase()}.pdf`);
+    }).catch(() => {
+      autoDownloadStarted.current = false;
+    }).finally(() => {
+      setIsDownloading(false);
+    });
+  }, [autoDownload, fullName, qrUrl]);
+
+  function handleBrowserPrint() {
+    window.print();
+  }
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto flex items-center justify-center p-3 md:p-6 print:p-0 print:bg-white print:static print:inset-auto">
@@ -49,26 +92,38 @@ export default function AdmitCard({ data, onClose }) {
           </div>
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={handlePrint}
+              disabled={isDownloading || !qrUrl}
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#173a5e] hover:bg-[#102a45] text-white text-xs md:text-sm font-bold rounded-lg shadow-md transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-base">download</span>
-              Download PDF
+              {isDownloading ? 'Preparing PDF...' : qrUrl ? 'Download PDF' : 'Preparing QR...'}
+            </button>
+            <button
+              type="button"
+              onClick={handleBrowserPrint}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs md:text-sm font-bold rounded-lg shadow-sm transition-all active:scale-95"
+            >
+              <span className="material-symbols-outlined text-base">print</span>
+              Print
             </button>
             {onClose && (
               <button
+                type="button"
                 onClick={onClose}
-                className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors text-xs font-bold"
                 title="Close"
               >
                 <span className="material-symbols-outlined text-xl">close</span>
+                Back to Profile
               </button>
             )}
           </div>
         </div>
 
         {/* Printable Card Frame — Exact 1:1 match to Official Sample */}
-        <div className="border-[2px] border-slate-700 p-4 md:p-6 bg-white font-sans text-slate-900 leading-normal print:border-[2px]">
+        <div ref={cardRef} className="border-[2px] border-slate-700 p-4 md:p-6 bg-white font-sans text-slate-900 leading-normal print:border-[2px]">
 
           {/* Header Row */}
           <div className="flex items-start justify-between gap-2 border-b border-slate-400 pb-2.5">
@@ -87,12 +142,17 @@ export default function AdmitCard({ data, onClose }) {
 
             {/* QR Code */}
             <div className="shrink-0 flex flex-col items-center">
-              <img
-                src={qrUrl}
-                alt="QR Verification"
-                className="w-16 h-16 md:w-18 md:h-18 border border-slate-300 p-0.5 rounded"
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
+              {qrUrl ? (
+                <img
+                  src={qrUrl}
+                  alt="QR Verification"
+                  className="w-16 h-16 md:w-18 md:h-18 border border-slate-300 p-0.5 rounded"
+                />
+              ) : (
+                <div className="w-16 h-16 md:w-18 md:h-18 border border-slate-300 rounded flex items-center justify-center text-[9px] font-bold text-slate-400">
+                  QR
+                </div>
+              )}
             </div>
           </div>
 
@@ -164,7 +224,9 @@ export default function AdmitCard({ data, onClose }) {
                   <img src={photoUrl} alt="Candidate" className="w-full h-full object-cover" />
                 ) : (
                   <div className="flex flex-col items-center justify-center p-2 text-center text-slate-400">
-                    <span className="material-symbols-outlined text-4xl mb-0.5">person</span>
+                    <span className="w-12 h-12 rounded-full bg-[#173a5e] text-white flex items-center justify-center text-lg font-black mb-2">
+                      {(fullName || 'Student Name').split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()}
+                    </span>
                     <span className="text-[9px] uppercase font-bold tracking-wider leading-tight text-slate-500">Candidate Photo</span>
                   </div>
                 )}
