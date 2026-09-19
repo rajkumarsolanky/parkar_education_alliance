@@ -8,9 +8,9 @@ const router = express.Router();
 // SIGNUP
 router.post('/signup', async (req, res) => {
   try {
-    const { full_name, cnic, mobile, dob, password } = req.body;
+    const { full_name, father_name, surname, cnic, mobile, dob, password } = req.body;
     if (!full_name || !cnic || !mobile || !dob || !password) {
-      return res.status(400).json({ error: 'Sab fields zaruri hain' });
+      return res.status(400).json({ error: 'Sab zaroori fields bharein' });
     }
 
     const existing = await pool.query(
@@ -23,10 +23,10 @@ router.post('/signup', async (req, res) => {
 
     const password_hash = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      `INSERT INTO users (full_name, cnic, mobile, dob, password_hash)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, full_name, cnic, mobile, dob, city, address`,
-      [full_name, cnic, mobile, dob, password_hash]
+      `INSERT INTO users (full_name, father_name, surname, cnic, mobile, dob, password_hash)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, full_name, father_name, surname, cnic, mobile, dob, city, address`,
+      [full_name, father_name || null, surname || null, cnic, mobile, dob, password_hash]
     );
 
     const user = result.rows[0];

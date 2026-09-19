@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, full_name, cnic, mobile, dob, city, address FROM users WHERE id = $1',
+      'SELECT id, full_name, father_name, surname, cnic, mobile, dob, city, address FROM users WHERE id = $1',
       [req.userId]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'User nahi mila' });
@@ -23,16 +23,16 @@ router.get('/', authMiddleware, async (req, res) => {
 // UPDATE profile
 router.put('/update', authMiddleware, async (req, res) => {
   try {
-    const { full_name, mobile, dob, city, address } = req.body;
+    const { full_name, father_name, surname, mobile, dob, city, address } = req.body;
     if (!full_name || !mobile) {
       return res.status(400).json({ error: 'Naam aur mobile zaruri hain' });
     }
 
     const result = await pool.query(
-      `UPDATE users SET full_name=$1, mobile=$2, dob=$3, city=$4, address=$5
-       WHERE id=$6
-       RETURNING id, full_name, cnic, mobile, dob, city, address`,
-      [full_name, mobile, dob || null, city || null, address || null, req.userId]
+      `UPDATE users SET full_name=$1, father_name=$2, surname=$3, mobile=$4, dob=$5, city=$6, address=$7
+       WHERE id=$8
+       RETURNING id, full_name, father_name, surname, cnic, mobile, dob, city, address`,
+      [full_name, father_name || null, surname || null, mobile, dob || null, city || null, address || null, req.userId]
     );
     res.json(result.rows[0]);
   } catch (err) {

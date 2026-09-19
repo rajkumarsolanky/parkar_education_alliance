@@ -89,7 +89,7 @@ router.get('/slips', adminAuth, async (req, res) => {
   try {
     const { status } = req.query;
     let query = `
-      SELECT s.*, u.full_name, u.cnic, u.mobile
+      SELECT s.*, u.full_name, u.father_name, u.surname, u.cnic, u.mobile
       FROM slips s
       JOIN users u ON s.user_id = u.id
     `;

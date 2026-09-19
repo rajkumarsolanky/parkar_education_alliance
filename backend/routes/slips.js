@@ -1,52 +1,38 @@
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const pool = require('../db');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, '..', 'uploads', 'fee-slips');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Multer config — memory storage for serverless & local compatibility
-const storage = multer.memoryStorage();
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
-  fileFilter: (req, file, cb) => {
-    const allowed = ['.jpg', '.jpeg', '.png', '.webp', '.pdf'];
-    const ext = path.extname(file.originalname).toLowerCase();
-    if (allowed.includes(ext)) cb(null, true);
-    else cb(new Error('Sirf JPG, PNG, WebP, PDF allowed hain'));
-  }
-});
-
-// ───────────── POST / — Submit new slip ─────────────
-router.post('/', authMiddleware, upload.single('fee_slip'), async (req, res) => {
+// ───────────── POST / — Register for Pre-Entry Test / Generate Admit Card ─────────────
+router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { exam_name, exam_date, fee_amount } = req.body;
-    if (!exam_name) {
-      return res.status(400).json({ error: 'Exam name zaruri hai' });
+    const { exam_name = 'Pre-Entry Test (Batch - 2026)', exam_date, test_venue } = req.body;
+
+    // Check if user already registered for this exam
+    const existing = await pool.query(
+      'SELECT * FROM slips WHERE user_id = $1 AND exam_name = $2',
+      [req.userId, exam_name]
+    );
+
+    if (existing.rows.length > 0) {
+      return res.json(existing.rows[0]);
     }
 
-    let fee_slip_url = null;
-    if (req.file) {
-      const mime = req.file.mimetype || 'image/jpeg';
-      const base64 = req.file.buffer.toString('base64');
-      fee_slip_url = `data:${mime};base64,${base64}`;
-    }
+    // Generate unique Application ID & Seat No
+    const appRandom = Math.floor(100000 + Math.random() * 900000);
+    const countRes = await pool.query('SELECT COUNT(*)::int AS count FROM slips');
+    const nextNum = (countRes.rows[0].count + 1).toString().padStart(4, '0');
+    const seat_no = `PEA-2026-${nextNum}`;
+    const application_id = appRandom.toString();
+    const defaultDate = exam_date || '2026-09-27';
+    const defaultVenue = test_venue || 'Public School / Govt Degree College, Nagarparkar';
 
     const result = await pool.query(
-      `INSERT INTO slips (user_id, exam_name, exam_date, fee_amount, fee_slip_url)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO slips (user_id, exam_name, exam_date, seat_no, application_id, test_venue, status)
+       VALUES ($1, $2, $3, $4, $5, $6, 'approved')
        RETURNING *`,
-      [req.userId, exam_name, exam_date || null, fee_amount || null, fee_slip_url]
+      [req.userId, exam_name, defaultDate, seat_no, application_id, defaultVenue]
     );
 
     res.json(result.rows[0]);
@@ -56,11 +42,15 @@ router.post('/', authMiddleware, upload.single('fee_slip'), async (req, res) => 
   }
 });
 
-// ───────────── GET / — Get my slips ─────────────
+// ───────────── GET / — Get my Admit Cards / Test Slips ─────────────
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT * FROM slips WHERE user_id = $1 ORDER BY created_at DESC',
+      `SELECT s.*, u.full_name, u.father_name, u.surname, u.cnic, u.mobile
+       FROM slips s
+       JOIN users u ON s.user_id = u.id
+       WHERE s.user_id = $1
+       ORDER BY s.created_at DESC`,
       [req.userId]
     );
     res.json(result.rows);

@@ -5,6 +5,8 @@ import api from '../api/axios';
 export default function Signup() {
   const [formData, setFormData] = useState({
     fullName: '',
+    fatherName: '',
+    surname: '',
     cnic: '',
     mobile: '',
     dob: '',
@@ -31,17 +33,17 @@ export default function Signup() {
 
   async function handleSignup(e) {
     e.preventDefault();
-    const { fullName, cnic, mobile, dob, password } = formData;
+    const { fullName, fatherName, surname, cnic, mobile, dob, password } = formData;
 
     if (!fullName || !cnic || !mobile || !dob || !password) {
-      setError('Please fill in all fields.');
+      setError('Please fill in all required fields.');
       return;
     }
 
     // CNIC validation pattern: 5 digits - 7 digits - 1 digit
     const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
     if (!cnicRegex.test(cnic)) {
-      setError('Please enter a valid CNIC format (e.g. 35201-1234567-1).');
+      setError('Please enter a valid CNIC format (e.g. 44301-1234567-1).');
       return;
     }
 
@@ -56,6 +58,8 @@ export default function Signup() {
     try {
       const response = await api.post('/auth/signup', {
         full_name: fullName,
+        father_name: fatherName,
+        surname,
         cnic,
         mobile,
         dob,
@@ -119,6 +123,36 @@ export default function Signup() {
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               placeholder="e.g. Muhammad Ali"
+              className="w-full bg-surface-bright border border-outline-variant/50 rounded-xl px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+
+          <div className="flex flex-col gap-xs">
+            <label htmlFor="fatherName" className="font-body-sm text-body-sm font-semibold text-on-surface flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person_outline</span>
+              Father's Name
+            </label>
+            <input
+              type="text"
+              id="fatherName"
+              value={formData.fatherName}
+              onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
+              placeholder="e.g. Ghulam Rasool"
+              className="w-full bg-surface-bright border border-outline-variant/50 rounded-xl px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary transition-colors"
+            />
+          </div>
+
+          <div className="flex flex-col gap-xs">
+            <label htmlFor="surname" className="font-body-sm text-body-sm font-semibold text-on-surface flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px] text-on-surface-variant">groups</span>
+              Surname / Caste
+            </label>
+            <input
+              type="text"
+              id="surname"
+              value={formData.surname}
+              onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
+              placeholder="e.g. Parkar, Soomro, etc."
               className="w-full bg-surface-bright border border-outline-variant/50 rounded-xl px-4 py-3 font-body-md text-body-md focus:outline-none focus:border-primary transition-colors"
             />
           </div>
