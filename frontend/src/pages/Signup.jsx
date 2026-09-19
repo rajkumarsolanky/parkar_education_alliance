@@ -72,7 +72,15 @@ export default function Signup() {
       navigate('/profile');
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.error || 'Signup failed. Mobile or CNIC might already be registered.');
+      const serverMsg = err.response?.data?.error;
+      const status = err.response?.status;
+      if (status === 409) {
+        setError('CNIC ya Mobile number pehle se registered hai.');
+      } else if (serverMsg) {
+        setError(serverMsg);
+      } else {
+        setError('Server se rabta nahi ho saka. Baraye meharbani dobara koshish karein.');
+      }
     } finally {
       setLoading(false);
     }
