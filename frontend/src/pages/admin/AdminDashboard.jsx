@@ -68,7 +68,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-surface flex flex-col font-body">
       {/* ──────── Header ──────── */}
-      <header className="bg-[#173a5e] text-white sticky top-0 z-40 shadow-md">
+      <header className="bg-emerald-700 text-white sticky top-0 z-40 shadow-md">
         <div className="max-w-7xl w-full mx-auto px-margin-mobile md:px-margin-desktop h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="material-symbols-outlined text-[28px] text-emerald-400">admin_panel_settings</span>
@@ -105,7 +105,7 @@ export default function AdminDashboard() {
           </div>
           <button
             onClick={() => { fetchStats(); fetchSlips(); }}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#173a5e] text-white hover:bg-[#102a45] rounded-xl text-xs font-bold shadow transition-all active:scale-95 w-max"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 text-white hover:bg-emerald-800 rounded-xl text-xs font-bold shadow transition-all active:scale-95 w-max"
           >
             <span className="material-symbols-outlined text-[16px]">refresh</span>
             Refresh List
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
         {/* ──────── Stats Cards ──────── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-md">
           <div className="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant/30 flex items-center gap-3 shadow-sm">
-            <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[24px]">groups</span>
             </div>
             <div>
@@ -159,15 +159,15 @@ export default function AdminDashboard() {
         <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant/30 p-md md:p-lg shadow-sm">
           <div className="flex items-center justify-between pb-md mb-md border-b border-outline-variant/20">
             <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#173a5e] text-[22px]">badge</span>
+              <span className="material-symbols-outlined text-emerald-700 text-[22px]">badge</span>
               Registered Candidates List ({slips.length})
             </h3>
           </div>
 
           {loading ? (
             <div className="py-xl flex flex-col items-center justify-center gap-2 text-slate-400">
-              <div className="w-8 h-8 border-4 border-[#173a5e] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-xs font-semibold">Loading candidates...</p>
+              <div className="w-8 h-8 border-4 border-emerald-700 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-xs font-semibold text-emerald-700">Loading candidates...</p>
             </div>
           ) : slips.length === 0 ? (
             <div className="py-xl flex flex-col items-center justify-center gap-2 text-center text-slate-400">
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
                           <span className="text-slate-500 text-[11px]">{slip.mobile}</span>
                         </td>
                         <td className="p-3">
-                          <span className="font-mono font-extrabold text-[#173a5e] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+                          <span className="font-mono font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
                             {slip.seat_no || `PEA-2026-${slip.id.toString().padStart(4, '0')}`}
                           </span>
                         </td>
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
                         <td className="p-3 text-center">
                           <button
                             onClick={() => openCandidateAdmitCard(slip)}
-                            className="inline-flex items-center gap-1.5 bg-[#173a5e] hover:bg-[#102a45] text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-all active:scale-95"
+                            className="inline-flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-all active:scale-95"
                           >
                             <span className="material-symbols-outlined text-[15px]">print</span>
                             Print Slip
@@ -244,7 +244,7 @@ export default function AdminDashboard() {
                       </div>
                       <button
                         onClick={() => openCandidateAdmitCard(slip)}
-                        className="shrink-0 inline-flex flex-col items-center gap-0.5 bg-[#173a5e] hover:bg-[#102a45] text-white px-3 py-2 rounded-xl text-[11px] font-bold shadow-md transition-all active:scale-95"
+                        className="shrink-0 inline-flex flex-col items-center gap-0.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-2 rounded-xl text-[11px] font-bold shadow-md transition-all active:scale-95"
                       >
                         <span className="material-symbols-outlined text-[18px]">print</span>
                         Print Slip
@@ -263,9 +263,9 @@ export default function AdminDashboard() {
                         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Mobile</p>
                         <p className="font-semibold text-slate-900 mt-0.5 text-[11px]">{slip.mobile}</p>
                       </div>
-                      <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-blue-500">Seat No</p>
-                        <p className="font-mono font-extrabold text-[#173a5e] mt-0.5 text-[12px]">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Seat No</p>
+                        <p className="font-mono font-extrabold text-emerald-700 mt-0.5 text-[12px]">
                           {slip.seat_no || `PEA-2026-${slip.id.toString().padStart(4, '0')}`}
                         </p>
                       </div>

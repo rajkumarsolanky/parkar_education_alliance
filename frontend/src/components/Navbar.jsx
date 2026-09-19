@@ -54,13 +54,13 @@ export default function Navbar() {
         to={path}
         className={`relative overflow-hidden rounded-full px-4 py-2.5 text-sm font-semibold tracking-wide transition-all duration-300 ease-out ${
           isActive
-            ? 'text-blue-600 bg-blue-50 shadow-sm'
-            : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/80'
+            ? 'text-emerald-700 bg-emerald-50 shadow-sm'
+            : 'text-slate-600 hover:text-emerald-700 hover:bg-emerald-50/80'
         }`}
       >
         <span className="relative z-10">{label}</span>
         <span
-          className={`absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-blue-500 transition-all duration-300 ${
+          className={`absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-emerald-600 transition-all duration-300 ${
             isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-75'
           }`}
         />
@@ -73,7 +73,7 @@ export default function Navbar() {
       <div className="flex justify-between items-center px-4 md:px-6 py-3">
         <Link to="/" className="flex items-center gap-3 group">
           <img alt="Parkar Education Alliance Logo" className="w-10 h-10 object-contain rounded-full border border-slate-200 bg-white shadow-sm group-hover:scale-105 transition-transform" src="src\assets\img\pea.png" />
-          <span className="font-bold text-lg md:text-xl text-blue-600 tracking-tight">PARKAR</span>
+          <span className="font-bold text-lg md:text-xl text-emerald-700 tracking-tight">PARKAR</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-2 rounded-full bg-slate-100/80 px-2 py-1 border border-slate-200/80">
@@ -87,7 +87,7 @@ export default function Navbar() {
           {user ? (
             <>
               <div
-                className="hidden md:flex w-9 h-9 rounded-full bg-blue-600 items-center justify-center text-white font-bold cursor-pointer shadow-md shadow-blue-200"
+                className="hidden md:flex w-9 h-9 rounded-full bg-emerald-700 items-center justify-center text-white font-bold cursor-pointer shadow-md shadow-emerald-200"
                 onClick={() => navigate('/profile')}
               >
                 {initials}
@@ -97,7 +97,7 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <Link to="/login" className="hidden md:flex items-center justify-center bg-blue-600 text-white font-semibold px-4 py-2.5 rounded-full shadow-md shadow-blue-200 hover:bg-blue-500 transition-all active:scale-95">
+            <Link to="/login" className="hidden md:flex items-center justify-center bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-full shadow-md shadow-emerald-200 hover:bg-emerald-600 transition-all active:scale-95">
               Login / Sign Up
             </Link>
           )}
@@ -119,22 +119,22 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-md flex flex-col gap-1">
-          <Link to="/" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+          <Link to="/" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
             <span className="material-symbols-outlined text-[18px]">home</span>Home
           </Link>
-          <Link to="/about" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+          <Link to="/about" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
             <span className="material-symbols-outlined text-[18px]">info</span>About
           </Link>
-          <Link to="/testing-services" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+          <Link to="/testing-services" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
             <span className="material-symbols-outlined text-[18px]">quiz</span>Testing Services
           </Link>
-          <Link to="/contact" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-primary hover:bg-surface-container px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+          <Link to="/contact" className="flex items-center gap-2 font-body-md text-body-md text-on-surface-variant hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
             <span className="material-symbols-outlined text-[18px]">mail</span>Contact
           </Link>
           <div className="h-px bg-outline-variant/30 my-1"></div>
           {user ? (
             <>
-              <Link to="/profile" className="flex items-center gap-2 font-body-md text-body-md text-primary font-semibold hover:bg-primary/10 px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
+              <Link to="/profile" className="flex items-center gap-2 font-body-md text-body-md text-emerald-700 font-semibold hover:bg-emerald-50 px-3 py-2.5 rounded-xl transition-colors" onClick={() => setMenuOpen(false)}>
                 <span className="material-symbols-outlined text-[18px]">badge</span>My Profile & Admit Card
               </Link>
               <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="flex items-center gap-2 text-left text-error font-semibold px-3 py-2.5 rounded-xl hover:bg-error-container/20 transition-colors">
@@ -142,7 +142,7 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <Link to="/login" className="bg-primary text-on-primary font-label-caps text-label-caps px-md py-sm rounded-full text-center mt-2 flex items-center justify-center gap-2" onClick={() => setMenuOpen(false)}>
+            <Link to="/login" className="bg-emerald-700 text-white font-label-caps text-label-caps px-md py-sm rounded-full text-center mt-2 flex items-center justify-center gap-2" onClick={() => setMenuOpen(false)}>
               <span className="material-symbols-outlined text-[18px]">login</span>Login / Sign Up
             </Link>
           )}

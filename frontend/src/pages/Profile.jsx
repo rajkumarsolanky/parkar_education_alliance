@@ -185,8 +185,8 @@ export default function Profile() {
     return (
       <div className="min-h-[calc(100vh-16rem)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-2">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="font-body-md text-body-md text-on-surface-variant font-medium">Loading Candidate Profile...</p>
+          <div className="w-8 h-8 border-4 border-emerald-700 border-t-transparent rounded-full animate-spin"></div>
+          <p className="font-body-md text-body-md text-emerald-700 font-semibold">Loading Candidate Profile...</p>
         </div>
       </div>
     );
@@ -199,7 +199,7 @@ export default function Profile() {
       <div className="lg:hidden flex flex-col gap-3 mb-4">
         {/* Compact Avatar Row */}
         <div className="bg-surface-container-lowest rounded-2xl px-4 py-3 border border-outline-variant/30 flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-[#173a5e] text-white flex items-center justify-center font-bold text-xl shadow-md uppercase shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-md uppercase shrink-0">
             {user?.full_name ? user.full_name.charAt(0) : 'U'}
           </div>
           <div className="flex-1 min-w-0">
@@ -226,7 +226,7 @@ export default function Profile() {
               onClick={() => { setActiveTab(tab.id); setError(''); setSuccessMsg(''); }}
               className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === tab.id
-                  ? 'bg-[#173a5e] text-white shadow-md'
+                  ? 'bg-emerald-700 text-white shadow-md'
                   : 'bg-surface-container-lowest border border-outline-variant/30 text-on-surface-variant'
               }`}
             >
@@ -242,7 +242,7 @@ export default function Profile() {
         {/* Left Column: Sidebar Profile Navigation (Desktop only) */}
         <div className="hidden lg:flex lg:col-span-1 flex-col gap-md">
           <div className="bg-surface-container-lowest rounded-3xl p-md border border-outline-variant/30 ambient-shadow-sm flex flex-col items-center text-center">
-            <div className="w-20 h-20 rounded-2xl bg-[#173a5e] text-white flex items-center justify-center font-bold text-2xl shadow-md uppercase mb-sm">
+            <div className="w-20 h-20 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold text-2xl shadow-md uppercase mb-sm">
               {user?.full_name ? user.full_name.charAt(0) : 'U'}
             </div>
             <h2 className="font-headline-sm text-body-lg font-bold text-on-surface leading-tight">{user?.full_name}</h2>
@@ -257,7 +257,7 @@ export default function Profile() {
               onClick={() => { setActiveTab('admit-card'); setError(''); setSuccessMsg(''); }}
               className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'admit-card'
-                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  ? 'bg-emerald-700 text-white shadow-md shadow-slate-200'
                   : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
@@ -269,7 +269,7 @@ export default function Profile() {
               onClick={() => { setActiveTab('dashboard'); setError(''); setSuccessMsg(''); }}
               className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'dashboard'
-                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  ? 'bg-emerald-700 text-white shadow-md shadow-slate-200'
                   : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
@@ -281,7 +281,7 @@ export default function Profile() {
               onClick={() => { setActiveTab('edit'); setError(''); setSuccessMsg(''); }}
               className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'edit'
-                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  ? 'bg-emerald-700 text-white shadow-md shadow-slate-200'
                   : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
@@ -293,7 +293,7 @@ export default function Profile() {
               onClick={() => { setActiveTab('security'); setError(''); setSuccessMsg(''); }}
               className={`profile-tab-button flex items-center gap-3 px-md py-3 rounded-2xl font-body-md text-body-md font-semibold transition-all duration-150 ${
                 activeTab === 'security'
-                  ? 'bg-[#173a5e] text-white shadow-md shadow-slate-200'
+                  ? 'bg-emerald-700 text-white shadow-md shadow-slate-200'
                   : 'text-on-surface-variant hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
@@ -337,7 +337,7 @@ export default function Profile() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant/30 pb-md">
                   <div>
                     <h2 className="font-headline-md text-headline-sm font-bold text-on-surface flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[#173a5e] text-[28px]">badge</span>
+                      <span className="material-symbols-outlined text-emerald-700 text-[28px]">badge</span>
                       Pre-Entry Test Admit Card (Roll No Slip)
                     </h2>
                     <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
@@ -349,7 +349,7 @@ export default function Profile() {
                     <button
                       type="button"
                       onClick={handleDownloadPdf}
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#173a5e] hover:bg-[#102a45] text-white text-sm font-bold rounded-xl shadow-md transition-all active:scale-95 duration-150"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold rounded-xl shadow-md transition-all active:scale-95 duration-150"
                     >
                       <span className="material-symbols-outlined text-[18px]">download</span>
                       Download PDF
@@ -358,7 +358,7 @@ export default function Profile() {
                 </div>
 
                 {/* Candidate Admit Card Banner Preview Card */}
-                <div className="border-2 border-[#173a5e]/30 rounded-2xl p-5 md:p-6 bg-gradient-to-br from-slate-50 to-emerald-50/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
+                <div className="border-2 border-emerald-700/30 rounded-2xl p-5 md:p-6 bg-gradient-to-br from-slate-50 to-emerald-50/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
                   <div className="space-y-2">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full border border-emerald-300">
                       <span className="material-symbols-outlined text-[15px]">verified</span>
@@ -381,7 +381,7 @@ export default function Profile() {
 
                 {/* Test Instructions Box */}
                 <div className="bg-surface-container rounded-2xl p-4 md:p-5 border border-outline-variant/30 space-y-2">
-                  <h4 className="font-bold text-sm text-on-surface uppercase tracking-wide flex items-center gap-1.5 text-[#173a5e]">
+                  <h4 className="font-bold text-sm text-on-surface uppercase tracking-wide flex items-center gap-1.5 text-emerald-700">
                     <span className="material-symbols-outlined text-base">info</span>
                     Important Test Day Instructions
                   </h4>
@@ -443,7 +443,7 @@ export default function Profile() {
                 <div className="pt-2 flex justify-start">
                   <button
                     onClick={() => setActiveTab('admit-card')}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#173a5e] hover:bg-[#102a45] text-white font-bold text-sm rounded-xl shadow-md transition-all active:scale-95"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm rounded-xl shadow-md transition-all active:scale-95"
                   >
                     <span className="material-symbols-outlined text-lg">badge</span>
                     Go to Admit Card / Roll No Slip
@@ -540,7 +540,7 @@ export default function Profile() {
                   <div className="flex justify-end gap-3 pt-md border-t border-outline-variant/30">
                     <button
                       type="submit"
-                      className="bg-[#173a5e] text-white font-body-md text-body-md font-bold px-lg py-sm rounded-full hover:bg-[#102a45] shadow-md transition-all active:scale-95 duration-150"
+                      className="bg-emerald-700 text-white font-body-md text-body-md font-bold px-lg py-sm rounded-full hover:bg-emerald-800 shadow-md transition-all active:scale-95 duration-150"
                     >
                       Save Profile Updates
                     </button>
@@ -589,7 +589,7 @@ export default function Profile() {
                   <div className="pt-sm">
                     <button
                       type="submit"
-                      className="bg-[#173a5e] text-white font-body-md text-body-md font-bold px-lg py-sm rounded-full hover:bg-[#102a45] shadow-md transition-all active:scale-95 duration-150"
+                      className="bg-emerald-700 text-white font-body-md text-body-md font-bold px-lg py-sm rounded-full hover:bg-emerald-800 shadow-md transition-all active:scale-95 duration-150"
                     >
                       Update Password
                     </button>

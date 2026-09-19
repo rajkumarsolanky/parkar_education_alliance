@@ -95,7 +95,7 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
               type="button"
               onClick={handlePrint}
               disabled={isDownloading || !qrUrl}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#173a5e] hover:bg-[#102a45] text-white text-xs md:text-sm font-bold rounded-lg shadow-md transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs md:text-sm font-bold rounded-lg shadow-md transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-base">download</span>
               {isDownloading ? 'Preparing PDF...' : qrUrl ? 'Download PDF' : 'Preparing QR...'}
@@ -131,7 +131,7 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
             <div className="flex items-center gap-3">
               <img src={peaLogo} alt="PEA Logo" className="w-16 h-16 md:w-20 md:h-20 object-contain shrink-0" />
               <div>
-                <h1 className="text-lg md:text-2xl font-black text-[#173a5e] tracking-tight uppercase">
+                <h1 className="text-lg md:text-2xl font-black text-emerald-700 tracking-tight uppercase">
                   PARKAR EDUCATION ALLIANCE
                 </h1>
                 <p className="text-[11px] md:text-xs font-semibold text-slate-600 tracking-wide mt-0.5">
@@ -158,7 +158,7 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
 
           {/* Title Badges */}
           <div className="text-center my-3">
-            <div className="inline-block bg-[#173a5e] text-white px-8 py-1 rounded-md text-sm md:text-base font-extrabold tracking-wider uppercase">
+            <div className="inline-block bg-emerald-700 text-white px-8 py-1 rounded-md text-sm md:text-base font-extrabold tracking-wider uppercase">
               ADMIT CARD
             </div>
             <h2 className="text-sm md:text-base font-bold text-slate-900 mt-1 uppercase tracking-wide">
@@ -224,7 +224,7 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
                   <img src={photoUrl} alt="Candidate" className="w-full h-full object-cover" />
                 ) : (
                   <div className="flex flex-col items-center justify-center p-2 text-center text-slate-400">
-                    <span className="w-12 h-12 rounded-full bg-[#173a5e] text-white flex items-center justify-center text-lg font-black mb-2">
+                    <span className="w-12 h-12 rounded-full bg-emerald-700 text-white flex items-center justify-center text-lg font-black mb-2">
                       {(fullName || 'Student Name').split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()}
                     </span>
                     <span className="text-[9px] uppercase font-bold tracking-wider leading-tight text-slate-500">Candidate Photo</span>
@@ -237,7 +237,7 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
           <div className="border-t border-slate-400 my-2.5"></div>
 
           {/* Instructions Header Banner */}
-          <div className="bg-[#173a5e] text-white px-2.5 py-1 rounded text-[10.5px] md:text-xs font-bold tracking-wide uppercase mb-2">
+          <div className="bg-emerald-700 text-white px-2.5 py-1 rounded text-[10.5px] md:text-xs font-bold tracking-wide uppercase mb-2">
             IMPORTANT INFORMATION / INSTRUCTIONS FOR THE DAY OF TEST:
           </div>
 
