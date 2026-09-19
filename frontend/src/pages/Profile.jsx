@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import AdmitCard from '../components/AdmitCard';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -8,6 +9,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [selectedAdmitCard, setSelectedAdmitCard] = useState(null);
   
   // Form states
   const [fullName, setFullName] = useState('');
@@ -625,6 +627,23 @@ export default function Profile() {
                                     <span className="material-symbols-outlined text-[14px]">image</span> View Slip
                                   </a>
                                 )}
+                                <button
+                                  onClick={() => setSelectedAdmitCard({
+                                    seatNo: `PEA-${slip.id.toString().padStart(4, '0')}`,
+                                    applicationId: `${user?.id || 100}${slip.id}`,
+                                    fullName: user?.full_name || fullName || 'Candidate',
+                                    fatherName: 'Father Name',
+                                    surname: 'Parkar',
+                                    cnic: user?.cnic || '44301-XXXXXXX-X',
+                                    testDate: slip.exam_date ? new Date(slip.exam_date).toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : 'Sunday, 27-September-2026 05:00 PM',
+                                    testVenue: 'Public School / Govt Degree College, Nagarparkar',
+                                    photoUrl: null
+                                  })}
+                                  className="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-[12px] font-bold border border-emerald-300 ml-2 transition-all active:scale-95 shadow-sm"
+                                  title="View and Print Pre-Entry Test Admit Card"
+                                >
+                                  <span className="material-symbols-outlined text-[14px]">badge</span> Admit Card
+                                </button>
                               </td>
                             </tr>
                           ))}
@@ -669,6 +688,14 @@ export default function Profile() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Official Admit Card Modal */}
+      {selectedAdmitCard && (
+        <AdmitCard
+          data={selectedAdmitCard}
+          onClose={() => setSelectedAdmitCard(null)}
+        />
       )}
     </div>
   );

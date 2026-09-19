@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import adminApi from '../../api/adminAxios';
+import AdmitCard from '../../components/AdmitCard';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
@@ -8,6 +9,7 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null); // slip id being acted on
+  const [selectedAdmitCard, setSelectedAdmitCard] = useState(null);
 
   // Reject modal state
   const [rejectModal, setRejectModal] = useState({ open: false, slipId: null });
@@ -253,6 +255,25 @@ export default function AdminDashboard() {
                               Reject
                             </button>
                           </div>
+                        ) : slip.status === 'approved' ? (
+                          <button
+                            onClick={() => setSelectedAdmitCard({
+                              seatNo: `PEA-${slip.id.toString().padStart(4, '0')}`,
+                              applicationId: `${slip.user_id || 100}${slip.id}`,
+                              fullName: slip.full_name || 'Candidate',
+                              fatherName: 'Father Name',
+                              surname: 'Parkar',
+                              cnic: slip.cnic || '44301-XXXXXXX-X',
+                              testDate: slip.exam_date ? new Date(slip.exam_date).toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : 'Sunday, 27-September-2026 05:00 PM',
+                              testVenue: 'Public School / Govt Degree College, Nagarparkar',
+                              photoUrl: null
+                            })}
+                            className="inline-flex items-center gap-1 bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-[12px] font-semibold hover:bg-emerald-800 transition-colors active:scale-95 shadow-sm"
+                            title="Generate and Print Official Pre-Entry Test Admit Card"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">badge</span>
+                            Admit Card
+                          </button>
                         ) : slip.status === 'rejected' && slip.rejection_reason ? (
                           <span className="text-[12px] text-red-600 italic max-w-[150px] block truncate" title={slip.rejection_reason}>
                             {slip.rejection_reason}
@@ -338,6 +359,14 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ──────── Official Admit Card Modal ──────── */}
+      {selectedAdmitCard && (
+        <AdmitCard
+          data={selectedAdmitCard}
+          onClose={() => setSelectedAdmitCard(null)}
+        />
       )}
     </div>
   );
