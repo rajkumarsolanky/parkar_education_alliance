@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import adminApi from '../../api/adminAxios';
-import AdmitCard from '../../components/AdmitCard';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
@@ -9,7 +8,6 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
-  const [selectedAdmitCard, setSelectedAdmitCard] = useState(null);
 
   const navigate = useNavigate();
   const admin = JSON.parse(localStorage.getItem('admin_user') || '{}');
@@ -62,7 +60,8 @@ export default function AdminDashboard() {
       testVenue: slip?.test_venue || 'Public School / Govt Degree College, Nagarparkar',
       photoUrl: null
     };
-    setSelectedAdmitCard(cardData);
+    localStorage.setItem('pea_admit_card', JSON.stringify(cardData));
+    window.open('/admit-card', '_blank', 'noopener,noreferrer');
   }
 
   return (
@@ -293,13 +292,6 @@ export default function AdminDashboard() {
         </div>
       </main>
 
-      {/* ──────── Official Admit Card Modal ──────── */}
-      {selectedAdmitCard && (
-        <AdmitCard
-          data={selectedAdmitCard}
-          onClose={() => setSelectedAdmitCard(null)}
-        />
-      )}
     </div>
   );
 }

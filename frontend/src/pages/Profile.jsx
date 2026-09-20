@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import AdmitCard from '../components/AdmitCard';
+import userProfileIcon from '../assets/img/user-profile.svg';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -9,8 +9,6 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [selectedAdmitCard, setSelectedAdmitCard] = useState(null);
-  const [autoDownloadAdmitCard, setAutoDownloadAdmitCard] = useState(false);
   
   // Form states
   const [fullName, setFullName] = useState('');
@@ -109,11 +107,11 @@ export default function Profile() {
       testVenue: slip?.test_venue || 'Public School / Govt Degree College, Nagarparkar',
       photoUrl: null
     };
-    setSelectedAdmitCard(cardData);
+    localStorage.setItem('pea_admit_card', JSON.stringify(cardData));
+    window.open('/admit-card', '_blank', 'noopener,noreferrer');
   }
 
   function handleDownloadPdf() {
-    setAutoDownloadAdmitCard(true);
     openAdmitCard(slips[0] || null);
   }
 
@@ -199,8 +197,8 @@ export default function Profile() {
       <div className="lg:hidden flex flex-col gap-3 mb-4">
         {/* Compact Avatar Row */}
         <div className="bg-surface-container-lowest rounded-2xl px-4 py-3 border border-outline-variant/30 flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-md uppercase shrink-0">
-            {user?.full_name ? user.full_name.charAt(0) : 'U'}
+          <div className="w-12 h-12 rounded-xl bg-white border border-emerald-200 flex items-center justify-center shadow-md uppercase shrink-0 overflow-hidden">
+            <img src={userProfileIcon} alt="User profile" className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-bold text-on-surface text-sm leading-tight truncate">{user?.full_name}</p>
@@ -242,8 +240,8 @@ export default function Profile() {
         {/* Left Column: Sidebar Profile Navigation (Desktop only) */}
         <div className="hidden lg:flex lg:col-span-1 flex-col gap-md">
           <div className="bg-surface-container-lowest rounded-3xl p-md border border-outline-variant/30 ambient-shadow-sm flex flex-col items-center text-center">
-            <div className="w-20 h-20 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold text-2xl shadow-md uppercase mb-sm">
-              {user?.full_name ? user.full_name.charAt(0) : 'U'}
+            <div className="w-20 h-20 rounded-2xl bg-white border border-emerald-200 flex items-center justify-center shadow-md uppercase mb-sm overflow-hidden">
+              <img src={userProfileIcon} alt="User profile" className="w-full h-full object-cover" />
             </div>
             <h2 className="font-headline-sm text-body-lg font-bold text-on-surface leading-tight">{user?.full_name}</h2>
             {user?.father_name && (
@@ -602,17 +600,6 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Official Admit Card Modal */}
-      {selectedAdmitCard && (
-        <AdmitCard
-          data={selectedAdmitCard}
-          autoDownload={autoDownloadAdmitCard}
-          onClose={() => {
-            setSelectedAdmitCard(null);
-            setAutoDownloadAdmitCard(false);
-          }}
-        />
-      )}
     </div>
   );
 }

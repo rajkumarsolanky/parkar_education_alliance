@@ -3,7 +3,7 @@ import peaLogo from '../assets/img/pea.svg';
 import { generateAdmitCardPdfFromElement } from '../utils/admitCardPdf';
 import QRCode from 'qrcode';
 
-export default function AdmitCard({ data, onClose, autoDownload = false }) {
+export default function AdmitCard({ data, onClose, standalone = false }) {
   const {
     seatNo = 'PEA-2026-2469',
     applicationId = '246937',
@@ -17,7 +17,6 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
   } = data || {};
 
   const cardRef = useRef(null);
-  const autoDownloadStarted = useRef(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
 
@@ -59,63 +58,49 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
     }
   }
 
-  useEffect(() => {
-    if (!autoDownload || !qrUrl || autoDownloadStarted.current) return;
-
-    autoDownloadStarted.current = true;
-    setIsDownloading(true);
-    generateAdmitCardPdfFromElement(cardRef.current).then((pdf) => {
-      pdf.save(`pea-admit-card-${(fullName || 'candidate').replace(/\s+/g, '-').toLowerCase()}.pdf`);
-    }).catch(() => {
-      autoDownloadStarted.current = false;
-    }).finally(() => {
-      setIsDownloading(false);
-    });
-  }, [autoDownload, fullName, qrUrl]);
-
   function handleBrowserPrint() {
     window.print();
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto flex items-center justify-center p-3 md:p-6 print:p-0 print:bg-white print:static print:inset-auto">
+    <div className={`${standalone ? 'min-h-screen flex items-start justify-center p-3 md:p-6' : 'fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto flex items-center justify-center p-3 md:p-6'} print:p-0 print:bg-white print:static print:inset-auto`}>
       <div className="bg-white text-slate-900 rounded-2xl shadow-2xl max-w-2xl w-full p-4 md:p-6 relative print:shadow-none print:p-0 print:max-w-full print:rounded-none">
 
         {/* Top Control Bar (Hidden in Print / PDF) */}
-        <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 print:hidden">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-emerald-700 text-2xl">badge</span>
+        <div className={`${standalone ? 'flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 mb-4 bg-emerald-50/70 border border-emerald-100 rounded-2xl' : 'flex items-center justify-between pb-3 mb-3 border-b border-slate-200'} print:hidden`}>
+          <div className="flex items-center gap-3 min-w-0">
+            <span aria-hidden="true" className="material-symbols-outlined shrink-0 text-emerald-700 text-2xl">badge</span>
             <div>
               <h2 className="font-bold text-base md:text-lg text-slate-800 leading-tight">Official Pre-Entry Test Admit Card</h2>
-              <p className="text-xs text-slate-500">Roll No Slip for Batch - 2026</p>
+              <p className="text-xs text-slate-500 mt-1">Roll No Slip for Batch - 2026</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 md:justify-end">
             <button
               type="button"
               onClick={handlePrint}
               disabled={isDownloading || !qrUrl}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs md:text-sm font-bold rounded-lg shadow-md transition-all active:scale-95"
+              className="inline-flex min-h-10 items-center justify-center gap-2 px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-300 text-white text-xs md:text-sm font-bold rounded-xl shadow-md transition-all active:scale-95 whitespace-nowrap"
             >
-              <span className="material-symbols-outlined text-base">download</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-base">download</span>
               {isDownloading ? 'Preparing PDF...' : qrUrl ? 'Download PDF' : 'Preparing QR...'}
             </button>
             <button
               type="button"
               onClick={handleBrowserPrint}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs md:text-sm font-bold rounded-lg shadow-sm transition-all active:scale-95"
+              className="inline-flex min-h-10 items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs md:text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95 whitespace-nowrap"
             >
-              <span className="material-symbols-outlined text-base">print</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-base">print</span>
               Print
             </button>
             {onClose && (
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors text-xs font-bold"
+                className="inline-flex min-h-10 items-center justify-center gap-2 px-3 py-2.5 text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent hover:border-slate-200 rounded-xl transition-colors text-xs font-bold whitespace-nowrap"
                 title="Close"
               >
-                <span className="material-symbols-outlined text-xl">close</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-xl">close</span>
                 Back to Profile
               </button>
             )}
@@ -146,10 +131,10 @@ export default function AdmitCard({ data, onClose, autoDownload = false }) {
                 <img
                   src={qrUrl}
                   alt="QR Verification"
-                  className="w-16 h-16 md:w-18 md:h-18 border border-slate-300 p-0.5 rounded"
+                  className="w-16 h-16 md:w-20 md:h-20 border border-slate-300 p-0.5 rounded"
                 />
               ) : (
-                <div className="w-16 h-16 md:w-18 md:h-18 border border-slate-300 rounded flex items-center justify-center text-[9px] font-bold text-slate-400">
+                <div className="w-16 h-16 md:w-20 md:h-20 border border-slate-300 rounded flex items-center justify-center text-[9px] font-bold text-slate-400">
                   QR
                 </div>
               )}

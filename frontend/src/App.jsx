@@ -10,17 +10,19 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Reset from './pages/Reset';
+import AdmitCardPage from './pages/AdmitCardPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 
 export default function App() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAdmitCardRoute = location.pathname === '/admit-card';
 
   return (
     <div className="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col">
-      {!isAdminRoute && <Navbar />}
-      <main className={`flex-grow ${isAdminRoute ? '' : 'pt-24'}`}>
+      {!isAdminRoute && !isAdmitCardRoute && <Navbar />}
+      <main className={`flex-grow ${isAdminRoute || isAdmitCardRoute ? '' : 'pt-24'}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -30,6 +32,7 @@ export default function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/reset" element={<Reset />} />
+          <Route path="/admit-card" element={<AdmitCardPage />} />
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -40,7 +43,7 @@ export default function App() {
           } />
         </Routes>
       </main>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isAdmitCardRoute && <Footer />}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import peaLogo from '../assets/img/pea.svg';
+import userProfileIcon from '../assets/img/user-profile.svg';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,10 +44,6 @@ export default function Navbar() {
     navigate('/login');
   }
 
-  const initials = user?.full_name
-    ? user.full_name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2)
-    : 'U';
-
   const navLink = (path, label) => {
     const isActive = location.pathname === path;
 
@@ -88,10 +85,10 @@ export default function Navbar() {
           {user ? (
             <>
               <div
-                className="hidden md:flex w-9 h-9 rounded-full bg-emerald-700 items-center justify-center text-white font-bold cursor-pointer shadow-md shadow-emerald-200"
+                className="hidden md:flex w-9 h-9 rounded-full bg-white border border-emerald-200 items-center justify-center cursor-pointer shadow-md shadow-emerald-100 overflow-hidden"
                 onClick={() => navigate('/profile')}
               >
-                {initials}
+                <img src={userProfileIcon} alt="User profile" className="w-full h-full object-cover" />
               </div>
               <button onClick={handleLogout} className="hidden md:flex items-center gap-1 bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-full border border-slate-200 hover:bg-slate-200 transition-all">
                 <span className="material-symbols-outlined text-[16px]">logout</span> Logout
