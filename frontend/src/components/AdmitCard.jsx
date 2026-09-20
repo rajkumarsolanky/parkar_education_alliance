@@ -78,8 +78,7 @@ export default function AdmitCard({ data, onClose, standalone = false }) {
           <div className="flex flex-wrap items-center gap-2 md:justify-end">
             <button
               type="button"
-              onClick={handlePrint}
-              disabled={isDownloading || !qrUrl}
+              onClick={handleBrowserPrint}
               className="inline-flex min-h-10 items-center justify-center gap-2 px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-300 text-white text-xs md:text-sm font-bold rounded-xl shadow-md transition-all active:scale-95 whitespace-nowrap"
             >
               <span aria-hidden="true" className="material-symbols-outlined text-base">download</span>
