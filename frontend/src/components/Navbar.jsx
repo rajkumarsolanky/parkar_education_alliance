@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import peaLogo from '../assets/img/pea.svg';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -72,7 +73,7 @@ export default function Navbar() {
     <nav className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-6xl backdrop-blur-xl transition-all duration-300 ${scrolled ? 'bg-white/85 shadow-[0_14px_30px_rgba(17,24,39,0.08)]' : 'bg-white/75'} border border-slate-200/80 rounded-full`}>
       <div className="flex justify-between items-center px-4 md:px-6 py-3">
         <Link to="/" className="flex items-center gap-3 group">
-          <img alt="Parkar Education Alliance Logo" className="w-10 h-10 object-contain rounded-full border border-slate-200 bg-white shadow-sm group-hover:scale-105 transition-transform" src="src\assets\img\pea.png" />
+          <img alt="Parkar Education Alliance Logo" className="w-10 h-10 object-contain rounded-full border border-slate-200 bg-white shadow-sm group-hover:scale-105 transition-transform" src={peaLogo} />
           <span className="font-bold text-lg md:text-xl text-emerald-700 tracking-tight">PARKAR</span>
         </Link>
 

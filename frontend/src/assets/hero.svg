@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 360" role="img" aria-labelledby="title desc">
+  <title id="title">Layered rounded platform</title>
+  <desc id="desc">A violet and white stacked rounded platform illustration</desc>
+  <defs>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b16d8"/>
+      <stop offset="0.48" stop-color="#8f45ee"/>
+      <stop offset="1" stop-color="#4b0cae"/>
+    </linearGradient>
+    <linearGradient id="whiteTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e7e7ee"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
+      <feOffset dy="8"/>
+      <feComponentTransfer><feFuncA type="gamma" amplitude=".22" exponent="1"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)" stroke-linejoin="round">
+    <path d="M18 244 170 154 322 244v34c0 12-7 23-18 29l-116 67c-11 6-24 6-35 0L36 307c-11-6-18-17-18-29Z" fill="url(#violet)" stroke="#5f27c9" stroke-width="2"/>
+    <path d="M18 244c0-11 7-22 18-28l116-67c11-6 24-6 35 0l117 67c11 6 18 17 18 28s-7 22-18 28l-117 67c-11 6-24 6-35 0L36 272c-11-6-18-17-18-28Z" fill="url(#whiteTop)" stroke="#8b8c98" stroke-width="2"/>
+    <path d="M18 108 170 18l152 90v35c0 12-7 23-18 29l-116 67c-11 6-24 6-35 0L36 172c-11-6-18-17-18-29Z" fill="#f4f4f7" stroke="#858691" stroke-width="2"/>
+    <path d="M18 108c0-11 7-22 18-28L152 13c11-6 24-6 35 0l117 67c11 6 18 17 18 28s-7 22-18 28l-117 67c-11 6-24 6-35 0L36 136c-11-6-18-17-18-28Z" fill="url(#whiteTop)" stroke="#858691" stroke-width="2"/>
+    <path d="M18 108 170 18l152 90-152 90Z" fill="#fff" opacity=".78"/>
+  </g>
+</svg>

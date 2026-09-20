@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import peaLogo from '../assets/img/pea.png';
+import peaLogo from '../assets/img/pea.svg';
 import { generateAdmitCardPdfFromElement } from '../utils/admitCardPdf';
 import QRCode from 'qrcode';
 
