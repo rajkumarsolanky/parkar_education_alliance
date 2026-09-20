@@ -8,6 +8,7 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
+  const [pendingDelete, setPendingDelete] = useState(null);
 
   const navigate = useNavigate();
   const admin = JSON.parse(localStorage.getItem('admin_user') || '{}');
@@ -39,6 +40,34 @@ export default function AdminDashboard() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  function requestDeleteSlip(slip) {
+    setPendingDelete({ ...slip, deleteType: 'slip' });
+  }
+
+  function requestDeleteUser(slip) {
+    setPendingDelete({ ...slip, deleteType: 'user' });
+  }
+
+  async function handleDeleteSlip() {
+    if (!pendingDelete) return;
+
+    const actionId = pendingDelete.deleteType === 'user' ? pendingDelete.user_id : pendingDelete.id;
+    setActionLoading(actionId);
+    try {
+      const endpoint = pendingDelete.deleteType === 'user'
+        ? `/admin/users/${pendingDelete.user_id}`
+        : `/admin/slips/${pendingDelete.id}`;
+      await adminApi.delete(endpoint);
+      setPendingDelete(null);
+      await Promise.all([fetchStats(), fetchSlips()]);
+    } catch (err) {
+      console.error(err);
+      setPendingDelete({ ...pendingDelete, deleteError: err.response?.data?.error || 'Delete nahi ho saka.' });
+    } finally {
+      setActionLoading(null);
     }
   }
 
@@ -186,7 +215,7 @@ export default function AdminDashboard() {
                       <th className="p-3">Seat No</th>
                       <th className="p-3">App ID</th>
                       <th className="p-3">Test Date & Venue</th>
-                      <th className="p-3 text-center">Admit Card</th>
+                          <th className="p-3 text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -216,13 +245,34 @@ export default function AdminDashboard() {
                           <span className="text-[11px] text-slate-500">{slip.test_venue || 'Public School Nagarparkar'}</span>
                         </td>
                         <td className="p-3 text-center">
-                          <button
-                            onClick={() => openCandidateAdmitCard(slip)}
-                            className="inline-flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-all active:scale-95"
-                          >
-                            <span className="material-symbols-outlined text-[15px]">print</span>
-                            Print Slip
-                          </button>
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => openCandidateAdmitCard(slip)}
+                              className="inline-flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-all active:scale-95"
+                            >
+                              <span className="material-symbols-outlined text-[15px]">print</span>
+                              Print Slip
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => requestDeleteSlip(slip)}
+                              disabled={actionLoading === slip.id}
+                              className="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-100 disabled:opacity-60 text-red-700 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95"
+                            >
+                              <span className="material-symbols-outlined text-[15px]">delete</span>
+                              {actionLoading === slip.id ? 'Removing...' : 'Remove'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => requestDeleteUser(slip)}
+                              disabled={actionLoading === slip.user_id}
+                              className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95"
+                            >
+                              <span className="material-symbols-outlined text-[15px]">delete_forever</span>
+                              Account
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -242,11 +292,30 @@ export default function AdminDashboard() {
                         <p className="text-xs font-semibold text-slate-700 mt-0.5 uppercase tracking-wide">Surname: {slip.surname || '—'}</p>
                       </div>
                       <button
+                        type="button"
                         onClick={() => openCandidateAdmitCard(slip)}
                         className="shrink-0 inline-flex flex-col items-center gap-0.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-2 rounded-xl text-[11px] font-bold shadow-md transition-all active:scale-95"
                       >
                         <span className="material-symbols-outlined text-[18px]">print</span>
-                        Print Slip
+                        Print
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => requestDeleteSlip(slip)}
+                        disabled={actionLoading === slip.id}
+                        className="shrink-0 inline-flex flex-col items-center gap-0.5 bg-red-50 hover:bg-red-100 disabled:opacity-60 text-red-700 border border-red-200 px-3 py-2 rounded-xl text-[11px] font-bold transition-all active:scale-95"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                        {actionLoading === slip.id ? 'Removing...' : 'Remove'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => requestDeleteUser(slip)}
+                        disabled={actionLoading === slip.user_id}
+                        className="shrink-0 inline-flex flex-col items-center gap-0.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-3 py-2 rounded-xl text-[11px] font-bold transition-all active:scale-95"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">delete_forever</span>
+                        Account
                       </button>
                     </div>
 
@@ -291,6 +360,47 @@ export default function AdminDashboard() {
           )}
         </div>
       </main>
+
+      {pendingDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="delete-slip-title">
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl border border-red-100">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-2xl">delete_forever</span>
+              </div>
+              <div>
+                <h2 id="delete-slip-title" className="text-lg font-black text-slate-900">
+                  {pendingDelete.deleteType === 'user' ? 'Delete user account?' : 'Remove duplicate slip?'}
+                </h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  {pendingDelete.deleteType === 'user'
+                    ? 'This permanently removes the account and all of its slips.'
+                    : 'This action permanently removes this registration slip.'}
+                </p>
+              </div>
+            </div>
+            <div className="mt-5 rounded-2xl bg-slate-50 border border-slate-200 p-4">
+              <p className="font-bold text-slate-900">{pendingDelete.full_name || 'Candidate'}</p>
+              <p className="mt-1 text-xs text-slate-500">S/D/O {pendingDelete.father_name || '—'}</p>
+              <p className="mt-2 font-mono text-xs font-bold text-emerald-700">{pendingDelete.seat_no || `PEA-2026-${pendingDelete.id}`}</p>
+            </div>
+            {pendingDelete.deleteError && (
+              <p className="mt-3 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">{pendingDelete.deleteError}</p>
+            )}
+            <div className="mt-6 flex flex-col-reverse sm:flex-row justify-end gap-2">
+              <button type="button" onClick={() => { setPendingDelete(null); setActionLoading(null); }} className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-50">
+                Cancel
+              </button>
+              <button type="button" onClick={handleDeleteSlip} disabled={actionLoading === pendingDelete.id} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 text-white font-bold text-sm hover:bg-red-700 disabled:opacity-60">
+                <span className="material-symbols-outlined text-base">delete</span>
+                {actionLoading === (pendingDelete.deleteType === 'user' ? pendingDelete.user_id : pendingDelete.id)
+                  ? 'Removing...'
+                  : pendingDelete.deleteType === 'user' ? 'Delete Account' : 'Remove Slip'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

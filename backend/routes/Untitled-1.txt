@@ -1,0 +1,1 @@
+DELETE /api/admin/users/:id

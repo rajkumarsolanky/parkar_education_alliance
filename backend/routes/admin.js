@@ -88,15 +88,29 @@ router.get('/stats', adminAuth, async (req, res) => {
 router.get('/slips', adminAuth, async (req, res) => {
   try {
     const { status } = req.query;
+    await pool.query(
+      `DELETE FROM slips
+       WHERE id NOT IN (
+         SELECT DISTINCT ON (user_id, exam_name) id
+         FROM slips
+         ORDER BY user_id, exam_name, created_at ASC, id ASC
+       )`
+    );
+
     let query = `
-      SELECT s.*, u.full_name, u.father_name, u.surname, u.cnic, u.mobile
-      FROM slips s
-      JOIN users u ON s.user_id = u.id
+      WITH unique_slips AS (
+        SELECT DISTINCT ON (s.user_id, s.exam_name)
+          s.*, u.full_name, u.father_name, u.surname, u.cnic, u.mobile
+        FROM slips s
+        JOIN users u ON s.user_id = u.id
+        ORDER BY s.user_id, s.exam_name, s.created_at ASC, s.id ASC
+      )
+      SELECT * FROM unique_slips
     `;
     const params = [];
 
     if (status && ['pending', 'approved', 'rejected'].includes(status)) {
-      query += ' WHERE s.status = $1';
+      query += ' WHERE unique_slips.status = $1';
       params.push(status);
     }
 
@@ -148,6 +162,44 @@ router.put('/slips/:id/reject', adminAuth, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ───────────── DELETE /slips/:id — Remove duplicate slip ─────────────
+router.delete('/slips/:id', adminAuth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM slips WHERE id = $1 RETURNING id',
+      [req.params.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({ success: true, alreadyRemoved: true, id: Number(req.params.id) });
+    }
+
+    res.json({ success: true, id: result.rows[0].id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Slip delete nahi ho saki' });
+  }
+});
+
+// ───────────── DELETE /users/:id — Remove user account and slips ─────────────
+router.delete('/users/:id', adminAuth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM users WHERE id = $1 RETURNING id, full_name',
+      [req.params.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User nahi mila' });
+    }
+
+    res.json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'User account delete nahi ho saka' });
   }
 });
 
